@@ -5,6 +5,7 @@ import {
   Select,
   Button,
   Input,
+  Switch,
 } from 'antd';
 import '../styling/create.less';
 
@@ -34,7 +35,11 @@ return (
     </div>
     <div className='create'>
         <div id='createInput'>
-          <div>Add a Question</div>
+          <div>Test or Survey:</div>
+          <Switch checkedChildren="Test" unCheckedChildren="Survey" defaultChecked style={{width: '4.5vw'}}/>
+        </div>
+        <div id='createInput'>
+          <div>Add a Question:</div>
           <div>
           <Select defaultValue='Multiple Choice' onChange={handleChange}>
             <Option value="mc">Multiple Choice</Option>
