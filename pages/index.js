@@ -2,7 +2,6 @@ import {
   Layout,
 
 } from 'antd';
-import "../style.less";
 import Header from '../components/Header';
 
 
