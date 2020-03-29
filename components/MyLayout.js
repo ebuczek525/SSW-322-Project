@@ -8,10 +8,6 @@ import '../styling/Layout.less';
 const {Content, Footer } = Layout;
 
 
-const layoutStyle = {
-  margin: 20,
-  padding: 20,
-};
 
 
 

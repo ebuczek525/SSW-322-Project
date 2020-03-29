@@ -1,4 +1,6 @@
 import Layout from "../components/MyLayout";
+import MultipleChoice from "../components/MultpleChoice";
+
 
 import { Select, Button, Input, Switch } from "antd";
 import "../styling/create.less";
@@ -14,6 +16,7 @@ class Create extends React.Component {
       testName: '',
       desc: '',
       currQuestionType: 'mc',
+      questions: [],
     };
   }
 
@@ -32,6 +35,10 @@ class Create extends React.Component {
     this.setState({testOrSurvey: checked});
       
     console.log('changed:', checked );
+  }
+
+  getQuestionState = (state) => {
+    this.setState((oldState) => ({questions: [...oldState.questions, state]}))
   }
 
   render () {
@@ -88,7 +95,9 @@ class Create extends React.Component {
             </div>   
             <div id="createInput"></div>
             <hr style={{ width: "97%", marginTop: "1vh", marginBottom: "2vh" }} />
-            <div className="createContents"></div>
+            <div className="createContents">
+              <MultipleChoice callback={this.getQuestionState}/>
+            </div>
           </Layout>
         </div>
       </>
