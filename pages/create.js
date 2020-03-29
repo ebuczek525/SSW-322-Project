@@ -3,11 +3,6 @@ import Layout from "../components/MyLayout";
 import { Select, Button, Input, Switch } from "antd";
 import "../styling/create.less";
 
-
-function handleChange(value) {
-  console.log(`selected ${value}`);
-}
-
 const { Option } = Select;
 
 class Create extends React.Component {
@@ -15,11 +10,37 @@ class Create extends React.Component {
     super(props);
 
     this.state = {
-      
+      testOrSurvey: true,
+      testName: '',
+      desc: '',
+      currQuestionType: 'mc',
     };
   }
 
+  
+  handleChange(e) {
+    this.setState({[e.target.id]: e.target.value});
+    console.log('changed:', e );
+  }
+
+  handleQuestionChange(value) {
+    this.setState({currQuestionType: value});
+    console.log('changed:', value );
+  }
+
+  handleSwitchChange = (checked) => {
+    this.setState({testOrSurvey: checked});
+      
+    console.log('changed:', checked );
+  }
+
   render () {
+    const currQuestionType = this.state.currQuestionType;
+    const testName = this.state.testName;
+    const desc = this.state.desc;
+    console.log(this.state);
+
+
     return (
       <>
         <div>
@@ -32,21 +53,22 @@ class Create extends React.Component {
                   unCheckedChildren="Survey"
                   defaultChecked
                   style={{ width: "4.5vw", }}
+                  onChange={this.handleSwitchChange}
                 />
               </div>
               <div id="createInput">
                 <div>Test Name:</div>
-                <Input placeholder="Test Name" />
+                <Input value={testName} id='testName' placeholder="Test Name" onChange={(e) => this.handleChange(e)}/>
               </div>
               <div id="description">
                 <div >Add a Description:</div>
-                <Input />
+                <Input value={desc} id='desc' onChange={(e) => this.handleChange(e)}/>
               </div>
               <div style={{marginLeft: '2vw', marginTop: "1vh"}}>
                 <div style={{display:'inline-block'}}>
                     <div>Add a Question:</div>
                   <div>
-                    <Select defaultValue="Multiple Choice" onChange={handleChange}>
+                    <Select defaultValue="Multiple Choice" value={currQuestionType} onChange={(e) => this.handleQuestionChange(e)}>
                       <Option value="mc">Multiple Choice</Option>
                       <Option value="tf">True/False</Option>
                       <Option value="sa">Short Answer</Option>
