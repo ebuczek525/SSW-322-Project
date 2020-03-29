@@ -1,11 +1,14 @@
-import Layout from '../components/MyLayout';
+import {
+  Layout,
 
-export default function Index() {
-return (
-<div>
-   <Layout>
-      <p>Home page for Test/Survey System!</p>
-   </Layout>
-</div>
-);
-}
+} from 'antd';
+import "../style.less";
+import Header from '../components/Header';
+
+
+
+export default () => (
+  <Layout>
+    <Header />
+  </Layout>
+)
