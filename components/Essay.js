@@ -4,16 +4,16 @@ import { Input, Radio, Button} from "antd";
 
 import "../styling/question.less"
 
+const { TextArea } = Input;
 
-class TrueOrFalse extends React.Component {  
+
+class Essay extends React.Component {  
     constructor(props) {
         super(props);
     
         this.state = {
-            type: 'tf',
+            type: 'es',
             question: '',
-            correctAnswer: true,
-            answers: [true, false],
             value: '',
             index: this.props.index,
         };
@@ -24,6 +24,10 @@ class TrueOrFalse extends React.Component {
       handleQuestionChange(e) {
         this.setState({[e.target.id]: e.target.value}, () => {this.props.callback(this.state)});
         console.log('changed:', e );
+      }
+
+      handleAnswerChange(e) {
+        this.setState({[e.target.id]: e.target.value}, () => {this.props.callback(this.state)});
       }
 
       onChange = e => {
@@ -37,14 +41,10 @@ class TrueOrFalse extends React.Component {
 
     render() {
         const question = this.state.question;
-        const radioStyle = {
-            display: 'block',
-            height: '30px',
-            lineHeight: '30px',
-          };
+        const value = this.state.value;
         return (
             <>
-              <div className="multipleChoice">
+              <div className="essay">
                 <div >
                   <div id="question" style={{display: 'inline-block'}}>      
                       Question:
@@ -55,14 +55,7 @@ class TrueOrFalse extends React.Component {
                   </div>
                 </div>
                 <div id="answers">
-                <Radio.Group onChange={this.onChange} value={this.state.value}>
-                    <Radio style={radioStyle} value={true}>
-                       1. True
-                    </Radio>
-                    <Radio style={radioStyle} value={false}>
-                       2. False
-                    </Radio>
-                </Radio.Group>
+                  <TextArea rows={10} value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
                 </div>
               </div>
               <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
@@ -71,4 +64,4 @@ class TrueOrFalse extends React.Component {
     }
 }
 
-export default TrueOrFalse;
+export default Essay;

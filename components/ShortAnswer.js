@@ -5,7 +5,7 @@ import { Input, Radio, Button} from "antd";
 import "../styling/question.less"
 
 
-class MultipleChoice extends React.Component {  
+class ShortAnswer extends React.Component {  
     constructor(props) {
         super(props);
     
@@ -62,4 +62,4 @@ class MultipleChoice extends React.Component {
     }
 }
 
-export default MultipleChoice;
+export default ShortAnswer;

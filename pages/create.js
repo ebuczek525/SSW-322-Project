@@ -2,6 +2,7 @@ import Layout from "../components/MyLayout";
 import MultipleChoice from "../components/MultpleChoice";
 import TrueOrFalse from "../components/TrueOrFalse";
 import ShortAnswer from "../components/ShortAnswer";
+import Essay from "../components/Essay";
 
 import { Select, Button, Input, Switch } from "antd";
 import "../styling/create.less";
@@ -56,6 +57,8 @@ class Create extends React.Component {
         return <TrueOrFalse callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
       } else if (question.type === 'sa') {
         return <ShortAnswer callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
+      }  else if (question.type === 'es') {
+        return <Essay callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
       }
   });
   }
