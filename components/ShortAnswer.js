@@ -10,10 +10,8 @@ class MultipleChoice extends React.Component {
         super(props);
     
         this.state = {
-            type: 'mc',
+            type: 'sa',
             question: '',
-            correctAnswer: '',
-            answers: {},
             value: '',
             index: this.props.index,
         };
@@ -27,13 +25,7 @@ class MultipleChoice extends React.Component {
       }
 
       handleAnswerChange(e) {
-        e.persist();
-        console.log(e);
-        this.setState((state) => {
-          state.answers[e.target.id] = e.target.value;
-          return {answers: state.answers};
-        }, () => {this.props.callback(this.state)});
-        console.log('changed:', e );
+        this.setState({[e.target.id]: e.target.value}, () => {this.props.callback(this.state)});
       }
 
       onChange = e => {
@@ -47,16 +39,10 @@ class MultipleChoice extends React.Component {
 
     render() {
         const question = this.state.question;
-        const answers = this.state.answers;
-
-        const radioStyle = {
-            display: 'block',
-            height: '30px',
-            lineHeight: '30px',
-          };
+        const value = this.state.value;
         return (
             <>
-              <div className="multipleChoice">
+              <div className="shortAnswer">
                 <div >
                   <div id="question" style={{display: 'inline-block'}}>      
                       Question:
@@ -67,20 +53,7 @@ class MultipleChoice extends React.Component {
                   </div>
                 </div>
                 <div id="answers">
-                <Radio.Group onChange={this.onChange} value={this.state.value}>
-                    <Radio style={radioStyle} value={answers['answer1']}>
-                       <Input value={answers['answer1']} id='answer1' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
-                    </Radio>
-                    <Radio style={radioStyle} value={answers['answer2']}>
-                       <Input value={answers['answer2']} id='answer2' placeholder="Option 2..." onChange={(e) => this.handleAnswerChange(e)}/> 
-                    </Radio>
-                    <Radio style={radioStyle} value={answers['answer3']}>
-                       <Input value={answers['answer3']} id='answer3' placeholder="Option 3..." onChange={(e) => this.handleAnswerChange(e)}/>
-                    </Radio>
-                    <Radio style={radioStyle} value={answers['answer4']}>
-                       <Input value={answers['answer4']} id='answer4' placeholder="Option 4..." onChange={(e) => this.handleAnswerChange(e)}/>
-                    </Radio>
-                </Radio.Group>
+                  <Input value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
                 </div>
               </div>
               <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
