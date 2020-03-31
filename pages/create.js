@@ -1,6 +1,6 @@
 import Layout from "../components/MyLayout";
 import MultipleChoice from "../components/MultpleChoice";
-
+import TrueOrFalse from "../components/TrueOrFalse";
 
 import { Select, Button, Input, Switch } from "antd";
 import "../styling/create.less";
@@ -51,6 +51,10 @@ class Create extends React.Component {
     return this.state.questions.map((question) => {
       if (question.type === 'mc') {
         return <MultipleChoice callback={this.getQuestionState} key = {question.index} index={question.index} removeItself={this.removeQuestion}/>
+      } else if (question.type === 'tf') {
+        return <TrueOrFalse callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
+      } else {
+        
       }
   });
   }
