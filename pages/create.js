@@ -19,7 +19,6 @@ class Create extends React.Component {
       questions: [],
     };
   }
-
   
   handleChange(e) {
     this.setState({[e.target.id]: e.target.value});
@@ -33,12 +32,44 @@ class Create extends React.Component {
 
   handleSwitchChange = (checked) => {
     this.setState({testOrSurvey: checked});
-      
+    if (!this.state.testOrSurvey){
+
+    }
     console.log('changed:', checked );
   }
 
   getQuestionState = (state) => {
-    this.setState((oldState) => ({questions: [...oldState.questions, state]}))
+    this.setState((oldState) => {
+      oldState.questions[oldState.questions.findIndex(x => x.index === state.index)] = state
+      console.log(this.state.questions)
+      return {questions: oldState.questions}
+    }, () => {console.log(this.state.questions)})
+  }
+
+  renderQuestions = () => {
+    console.log(this.state.questions);
+    return this.state.questions.map((question) => {
+      if (question.type === 'mc') {
+        return <MultipleChoice callback={this.getQuestionState} key = {question.index} index={question.index} removeItself={this.removeQuestion}/>
+      }
+  });
+  }
+
+  addQuestion = () => {
+    this.setState((state) => {
+      state.questions.push( {
+        type: this.state.currQuestionType,
+        index: ('00000000000'+(Math.random().toString())).slice(-11)
+      })
+      return {questions: state.questions}
+    }, () => console.log(this.state.questions))
+  }
+
+  removeQuestion = (index) => {
+    console.log(index)
+      this.setState((state) => ({ 
+        questions: state.questions.filter((e) => !(e.index === index))
+      }), () => console.log(this.state.questions))
   }
 
   render () {
@@ -83,7 +114,7 @@ class Create extends React.Component {
                       <Option value="mt">Matching</Option>
                       <Option value="rc">Ranked Choice</Option>
                     </Select>
-                    <Button shape="circle" icon="plus" style={{ marginLeft: ".5vw" }} />
+                    <Button shape="circle" icon="plus" style={{ marginLeft: ".5vw" }} onClick={this.addQuestion}/>
                   </div>
                 </div>
                 <div style={{display:'inline-block'}}>
@@ -96,7 +127,7 @@ class Create extends React.Component {
             <div id="createInput"></div>
             <hr style={{ width: "97%", marginTop: "1vh", marginBottom: "2vh" }} />
             <div className="createContents">
-              <MultipleChoice callback={this.getQuestionState}/>
+              {this.renderQuestions()}
             </div>
           </Layout>
         </div>
