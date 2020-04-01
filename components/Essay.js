@@ -55,7 +55,7 @@ class Essay extends React.Component {
                   </div>
                 </div>
                 <div id="answers">
-                  <TextArea rows={10} value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
+                  <TextArea disabled rows={10} value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
                 </div>
               </div>
               <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />

@@ -53,7 +53,7 @@ class ShortAnswer extends React.Component {
                   </div>
                 </div>
                 <div id="answers">
-                  <Input value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
+                  <Input disabled value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
                 </div>
               </div>
               <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />

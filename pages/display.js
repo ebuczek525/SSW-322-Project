@@ -5,6 +5,7 @@ import {
  } from 'antd';
 
 import '../styling/display.less';
+import axios from 'axios';
 
 
 class Display extends React.Component {
@@ -12,15 +13,30 @@ class Display extends React.Component {
      super(props);
  
      this.state = {
-       id: ''
+       id: '',
+       code: ''
      };
    }
 
    handleChange(e) {
-      this.setState({[e.target.id]: e.target.value});
-      console.log('changed:', e );
+      this.setState({id: e.target.value});
+      console.log('changed:', e.target.value );
     }
   
+   getTest() {
+
+      axios.post('http://localhost:8080/display', this.state)
+         .then((response) => {
+            console.log(response);
+            this.setState(() => ( {code: response }), () => {
+               console.log(this.state)
+            })
+         })
+         .catch((error) => {
+            console.log(error);
+         });
+ };
+
  
    render () {
       const id = this.state.id;
@@ -33,9 +49,10 @@ class Display extends React.Component {
                   <div className='display'>
                   <div>Please enter code to display test/survey:</div>
                      <Input value={id} id='id' placeholder="MongoDB ID" onChange={(e) => this.handleChange(e)}/>
-                     <Button type="primary" style={{marginLeft: '.5vw', marginTop: '.5vh',  width: '135px'}}>Submit</Button>
+                     <Button type="primary" style={{marginLeft: '.5vw', marginTop: '.5vh',  width: '135px' }} onClick={() => this.getTest()}>Submit</Button>
                   </div>
                   <div className='displayContents'>
+                     <pre>   {JSON.stringify(this.state.code)} </pre>
                   </div>
                </Layout>
             </div>

@@ -57,10 +57,10 @@ class TrueOrFalse extends React.Component {
                 <div id="answers">
                 <Radio.Group onChange={this.onChange} value={this.state.value}>
                     <Radio style={radioStyle} value={true}>
-                       1. True
+                       True
                     </Radio>
                     <Radio style={radioStyle} value={false}>
-                       2. False
+                       False
                     </Radio>
                 </Radio.Group>
                 </div>

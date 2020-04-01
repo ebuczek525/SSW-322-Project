@@ -3,8 +3,10 @@ import MultipleChoice from "../components/MultpleChoice";
 import TrueOrFalse from "../components/TrueOrFalse";
 import ShortAnswer from "../components/ShortAnswer";
 import Essay from "../components/Essay";
+import RankedChoice from "../components/RankedChoice";
 
-import { Select, Button, Input, Switch } from "antd";
+import { Select, Button, Input, Switch, message,} from "antd";
+import axios from 'axios';
 import "../styling/create.less";
 
 const { Option } = Select;
@@ -19,7 +21,44 @@ class Create extends React.Component {
       desc: '',
       currQuestionType: 'mc',
       questions: [],
+      uploading: false,
     };
+  }
+
+
+  filtered = (raw) => {
+    let allowed = ['testOrSurvey', 'testName', 'desc', 'questions', 'uploading'];
+    Object.keys(raw)
+    .filter(key => allowed.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = raw[key];
+      return obj;
+    }, {});
+  }
+
+  handleCreate() {
+    this.setState({
+      uploading: true
+    });
+    axios.post('http://localhost:8080/create', this.state)
+        .then((response) => {
+          this.setState({
+            testOrSurvey: true,
+            testName: '',
+            desc: '',
+            questions: [],
+            uploading: false,
+          });
+          message.success('Test Created Successfully');
+          console.log(response);
+        })
+        .catch((error) => {
+          this.setState({
+            uploading: false,
+          });
+          message.error('Test Create Failed.');
+          console.log(error);
+        });
   }
   
   handleChange(e) {
@@ -59,6 +98,8 @@ class Create extends React.Component {
         return <ShortAnswer callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
       }  else if (question.type === 'es') {
         return <Essay callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
+      }  else if (question.type === 'rc') {
+        return <RankedChoice callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
       }
   });
   }
@@ -84,6 +125,8 @@ class Create extends React.Component {
     const currQuestionType = this.state.currQuestionType;
     const testName = this.state.testName;
     const desc = this.state.desc;
+    const uploading = this.state.uploading;
+
     console.log(this.state);
 
 
@@ -98,7 +141,7 @@ class Create extends React.Component {
                   checkedChildren="Test"
                   unCheckedChildren="Survey"
                   defaultChecked
-                  style={{ width: "4.5vw", }}
+                  style={{ width: "5vw", marginLeft: '.75vw'}}
                   onChange={this.handleSwitchChange}
                 />
               </div>
@@ -126,8 +169,9 @@ class Create extends React.Component {
                   </div>
                 </div>
                 <div style={{display:'inline-block'}}>
-                  <Button type="primary" style={{ marginLeft: "2vw", width: "135px" }}>
-                    Create
+                  <Button type="primary" style={{ marginLeft: "2vw", width: "150px"}} 
+                  onClick={() => this.handleCreate()} loading={uploading}>
+                      {uploading ? 'Uploading' : 'Create Test/Survey'}
                   </Button>
                 </div>
               </div>
