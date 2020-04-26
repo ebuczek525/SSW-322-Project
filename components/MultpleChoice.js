@@ -8,8 +8,9 @@ import "../styling/question.less"
 class MultipleChoice extends React.Component {  
     constructor(props) {
         super(props);
-    
-        this.state = {
+
+        if (this.props.editable){
+          this.state = {
             type: 'mc',
             question: '',
             correctAnswer: '',
@@ -18,8 +19,12 @@ class MultipleChoice extends React.Component {
             index: this.props.index,
         };
 
-        this.props.callback(this.state);
-      }
+          this.props.callback(this.state);
+        } else {
+          this.state = this.props.callback()
+        }
+    } 
+        
 
       handleQuestionChange(e) {
         this.setState({[e.target.id]: e.target.value}, () => {this.props.callback(this.state)});
@@ -54,38 +59,73 @@ class MultipleChoice extends React.Component {
             height: '30px',
             lineHeight: '30px',
           };
-        return (
-            <>
-              <div className="multipleChoice">
-                <div >
-                  <div id="question" style={{display: 'inline-block'}}>      
-                      Question:
-                      <Input value={question} id='question' placeholder="Enter Question..." onChange={(e) => this.handleQuestionChange(e)}/>
+
+        if (this.props.editable)  {
+          return (
+              <>
+                <div className="multipleChoice">
+                  <div >
+                    <div id="question" style={{display: 'inline-block'}}>      
+                        Question:
+                        <Input value={question} id='question' placeholder="Enter Question..." onChange={(e) => this.handleQuestionChange(e)}/>
+                    </div>
+                    <div style={{display: 'inline-block', marginLeft: '2vw', marginRight: '2vw' }}>
+                    <Button shape="circle" icon="delete" onClick={() => {this.props.removeItself(this.state.index)}}/>
+                    </div>
                   </div>
-                  <div style={{display: 'inline-block', marginLeft: '2vw', marginRight: '2vw' }}>
-                  <Button shape="circle" icon="delete" onClick={() => {this.props.removeItself(this.state.index)}}/>
+                  <div id="answers">
+                  <Radio.Group onChange={this.onChange} value={this.state.value}>
+                      <Radio style={radioStyle} value={answers['answer1']}>
+                        <Input value={answers['answer1']} id='answer1' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
+                      </Radio>
+                      <Radio style={radioStyle} value={answers['answer2']}>
+                        <Input value={answers['answer2']} id='answer2' placeholder="Option 2..." onChange={(e) => this.handleAnswerChange(e)}/> 
+                      </Radio>
+                      <Radio style={radioStyle} value={answers['answer3']}>
+                        <Input value={answers['answer3']} id='answer3' placeholder="Option 3..." onChange={(e) => this.handleAnswerChange(e)}/>
+                      </Radio>
+                      <Radio style={radioStyle} value={answers['answer4']}>
+                        <Input value={answers['answer4']} id='answer4' placeholder="Option 4..." onChange={(e) => this.handleAnswerChange(e)}/>
+                      </Radio>
+                  </Radio.Group>
                   </div>
                 </div>
-                <div id="answers">
-                <Radio.Group onChange={this.onChange} value={this.state.value}>
-                    <Radio style={radioStyle} value={answers['answer1']}>
-                       <Input value={answers['answer1']} id='answer1' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
-                    </Radio>
-                    <Radio style={radioStyle} value={answers['answer2']}>
-                       <Input value={answers['answer2']} id='answer2' placeholder="Option 2..." onChange={(e) => this.handleAnswerChange(e)}/> 
-                    </Radio>
-                    <Radio style={radioStyle} value={answers['answer3']}>
-                       <Input value={answers['answer3']} id='answer3' placeholder="Option 3..." onChange={(e) => this.handleAnswerChange(e)}/>
-                    </Radio>
-                    <Radio style={radioStyle} value={answers['answer4']}>
-                       <Input value={answers['answer4']} id='answer4' placeholder="Option 4..." onChange={(e) => this.handleAnswerChange(e)}/>
-                    </Radio>
-                </Radio.Group>
+                <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
+              </>   
+          );
+      } else {
+        return (
+          <>
+            <div className="multipleChoice">
+              <div >
+                <div id="question" style={{display: 'inline-block'}}>      
+                    Question:
+                    <Input value={question} id='question' disabled/>
+                </div>
+                <div style={{display: 'inline-block', marginLeft: '2vw', marginRight: '2vw' }}>
                 </div>
               </div>
-              <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
-            </>   
-        );
+              <div id="answers">
+              <Radio.Group onChange={this.onChange} value={this.state.value}>
+                  <Radio style={radioStyle} value={answers['answer1']}>
+                    <Input disabled value={answers['answer1']} id='answer1'/>
+                  </Radio>
+                  <Radio style={radioStyle} value={answers['answer2']}>
+                    <Input disabled value={answers['answer2']} id='answer2'/> 
+                  </Radio>
+                  <Radio style={radioStyle} value={answers['answer3']}>
+                    <Input disabled value={answers['answer3']} id='answer3'/>
+                  </Radio>
+                  <Radio style={radioStyle} value={answers['answer4']}>
+                    <Input disabled value={answers['answer4']} id='answer4'/>
+                  </Radio>
+              </Radio.Group>
+              </div>
+            </div>
+            <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
+          </>   
+      );
+      }
     }
 }
 

@@ -91,15 +91,17 @@ class Create extends React.Component {
     console.log(this.state.questions);
     return this.state.questions.map((question) => {
       if (question.type === 'mc') {
-        return <MultipleChoice callback={this.getQuestionState} key = {question.index} index={question.index} removeItself={this.removeQuestion}/>
+        return <MultipleChoice callback={this.getQuestionState} key = {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
       } else if (question.type === 'tf') {
-        return <TrueOrFalse callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
+        return <TrueOrFalse callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
       } else if (question.type === 'sa') {
-        return <ShortAnswer callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
+        return <ShortAnswer callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
       }  else if (question.type === 'es') {
-        return <Essay callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
+        return <Essay callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
       }  else if (question.type === 'rc') {
-        return <RankedChoice callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion}/>
+        return <RankedChoice callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
+      } else {
+        return null;
       }
   });
   }

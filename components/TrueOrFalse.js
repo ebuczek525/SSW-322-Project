@@ -9,16 +9,21 @@ class TrueOrFalse extends React.Component {
     constructor(props) {
         super(props);
     
-        this.state = {
+        if (this.props.editable){
+          this.state = {
             type: 'tf',
             question: '',
             correctAnswer: true,
             answers: [true, false],
             value: '',
             index: this.props.index,
-        };
+          };
 
-        this.props.callback(this.state);
+          this.props.callback(this.state);
+        } else {
+          this.state = this.props.callback()
+        }
+        
       }
 
       handleQuestionChange(e) {
@@ -42,32 +47,61 @@ class TrueOrFalse extends React.Component {
             height: '30px',
             lineHeight: '30px',
           };
-        return (
-            <>
-              <div className="multipleChoice">
-                <div >
-                  <div id="question" style={{display: 'inline-block'}}>      
-                      Question:
-                      <Input value={question} id='question' placeholder="Enter Question..." onChange={(e) => this.handleQuestionChange(e)}/>
+
+        if (this.props.editable)  {
+          return (
+              <>
+                <div className="multipleChoice">
+                  <div >
+                    <div id="question" style={{display: 'inline-block'}}>      
+                        Question:
+                        <Input value={question} id='question' placeholder="Enter Question..." onChange={(e) => this.handleQuestionChange(e)}/>
+                    </div>
+                    <div style={{display: 'inline-block', marginLeft: '2vw', marginRight: '2vw' }}>
+                    <Button shape="circle" icon="delete" onClick={() => {this.props.removeItself(this.state.index)}}/>
+                    </div>
                   </div>
-                  <div style={{display: 'inline-block', marginLeft: '2vw', marginRight: '2vw' }}>
-                  <Button shape="circle" icon="delete" onClick={() => {this.props.removeItself(this.state.index)}}/>
+                  <div id="answers">
+                  <Radio.Group onChange={this.onChange} value={this.state.value}>
+                      <Radio style={radioStyle} value={true}>
+                        True
+                      </Radio>
+                      <Radio style={radioStyle} value={false}>
+                        False
+                      </Radio>
+                  </Radio.Group>
                   </div>
                 </div>
-                <div id="answers">
-                <Radio.Group onChange={this.onChange} value={this.state.value}>
-                    <Radio style={radioStyle} value={true}>
-                       True
-                    </Radio>
-                    <Radio style={radioStyle} value={false}>
-                       False
-                    </Radio>
-                </Radio.Group>
+                <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
+              </>   
+          );
+        } else {
+            return (
+              <>
+                <div className="multipleChoice">
+                  <div >
+                    <div id="question" style={{display: 'inline-block'}}>      
+                        Question:
+                        <Input disabled value={question} id='question' placeholder="Enter Question..." onChange={(e) => this.handleQuestionChange(e)}/>
+                    </div>
+                    <div style={{display: 'inline-block', marginLeft: '2vw', marginRight: '2vw' }}>
+                    </div>
+                  </div>
+                  <div id="answers">
+                  <Radio.Group onChange={this.onChange} value={this.state.value}>
+                      <Radio style={radioStyle} value={true}>
+                        True
+                      </Radio>
+                      <Radio style={radioStyle} value={false}>
+                        False
+                      </Radio>
+                  </Radio.Group>
+                  </div>
                 </div>
-              </div>
-              <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
-            </>   
-        );
+                <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
+              </>   
+          );
+        }
     }
 }
 

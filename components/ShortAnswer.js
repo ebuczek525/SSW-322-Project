@@ -8,15 +8,18 @@ import "../styling/question.less"
 class ShortAnswer extends React.Component {  
     constructor(props) {
         super(props);
-    
-        this.state = {
+
+        if (this.props.editable){
+          this.state = {
             type: 'sa',
             question: '',
             value: '',
             index: this.props.index,
         };
-
-        this.props.callback(this.state);
+          this.props.callback(this.state);
+        } else {
+          this.state = this.props.callback()
+        }
       }
 
       handleQuestionChange(e) {
@@ -40,6 +43,8 @@ class ShortAnswer extends React.Component {
     render() {
         const question = this.state.question;
         const value = this.state.value;
+
+        if (this.props.editable)  {
         return (
             <>
               <div className="shortAnswer">
@@ -53,12 +58,32 @@ class ShortAnswer extends React.Component {
                   </div>
                 </div>
                 <div id="answers">
-                  <Input disabled value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
+                  <Input value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
                 </div>
               </div>
               <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
             </>   
         );
+      } else {
+        return (
+          <>
+            <div className="shortAnswer">
+              <div >
+                <div id="question" style={{display: 'inline-block'}}>      
+                    Question:
+                    <Input value={question} id='question' placeholder="Enter Question..." disabled/>
+                </div>
+                <div style={{display: 'inline-block', marginLeft: '2vw', marginRight: '2vw' }}>
+                </div>
+              </div>
+              <div id="answers">
+                <Input value={value} id='value' placeholder="Option 1..." onChange={(e) => this.handleAnswerChange(e)}/>
+              </div>
+            </div>
+            <hr style={{ width: "97%", marginTop: "3vh", marginBottom: "3vh" }} />
+          </>   
+      );
+      }
     }
 }
 

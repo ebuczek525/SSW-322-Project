@@ -5,6 +5,7 @@ const app = express();
 const url = 'mongodb://testsUser:tests@localhost:27017/tests';
 
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://testsUser:tests@localhost:27017/tests`,
     {
@@ -48,7 +49,6 @@ app.get('/test', function(req, res) {
   });
 
 app.post('/display', function(req, res) {
-    // req.body => { surveyOrCunt: Boolean, description }
     console.log('got to display');
     console.log(req.body)
     if(req.body.id == undefined){
@@ -66,6 +66,28 @@ app.post('/display', function(req, res) {
     });
     }
     
+});
+
+app.post('/modify', function(req, res) {
+  console.log('got to modify post');
+    test.findOneAndUpdate(
+      {_id: new ObjectId(req.body.id)}, 
+      {
+        testOrSurvey: req.body.code.testOrSurvey,
+        testName: req.body.code.testName,
+        desc: req.body.code.desc,
+        questions: req.body.code.questions
+      },
+      function(err, result) {
+        if (err) {
+          res.send(err);
+          console.log(req.body, err, result);
+        } else {
+          res.send(result);
+          console.log(req.body, err, result);
+        }
+      }
+    );
 });
 
 app.post('/create', function(req, res) {
