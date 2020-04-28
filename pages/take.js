@@ -24,94 +24,14 @@ class Display extends React.Component {
      this.state = {
        id: '',
        code: '',
-       modify: false,
-       currQuestionType: 'mc',
      };
    }
 
-   handleSwitchChange = (checked) => {
-      this.setState({testOrSurvey: checked});
-      if (!this.code.testOrSurvey){
-  
-      }
-      console.log('changed:', checked );
-    }
-
-    handleTestNameChange(e) {
-      e.persist()
-      this.setState((state) => {
-         console.log(state.code)
-         state.code.testName = e.target.value
-         return {
-            code: state.code
-         }
-      });
-      console.log('changed:', e.target.value );
-    }
-
-    handleDescChange(e) {
-      e.persist()
-      this.setState((state) => {
-         console.log(state.code)
-         state.code.desc = e.target.value
-         return {
-            code: state.code
-         }
-      });
-      console.log('changed:', e.target.value );
-    }
 
     handleLookUpChange(e) {
       this.setState({id: e.target.value});
       console.log('changed:', e.target.value );
     }
-
-    handleQuestionChange(value) {
-      this.setState({currQuestionType: value});
-      console.log('changed:', value );
-    }
-  
-  
-   displayCreate() {
-      return (
-         <div className="create">
-         <div id="createInput">
-           <div style={{marginBottom: '0.5vh'}}>Test or Survey:</div>
-           <Switch
-             checkedChildren="Test"
-             unCheckedChildren="Survey"
-             defaultChecked
-             style={{ width: "5vw", marginLeft: '.75vw'}}
-             onChange={this.handleSwitchChange}
-           />
-         </div>
-         <div id="createInput">
-           <div>Test Name:</div>
-           <Input value={this.state.code.testName} id='testName' placeholder="Test Name" onChange={(e) => this.handleTestNameChange(e)}/>
-         </div>
-         <div id="description">
-           <div >Add a Description:</div>
-           <Input value={this.state.code.desc} id='desc' onChange={(e) => this.handleDescChange(e)}/>
-         </div>
-         <div style={{marginLeft: '2vw', marginTop: "1vh"}}>
-           <div style={{display:'inline-block'}}>
-               <div>Add a Question:</div>
-             <div>
-               <Select defaultValue="Multiple Choice" value={this.state.currQuestionType} onChange={(e) => this.handleQuestionChange(e)}>
-                 <Option value="mc">Multiple Choice</Option>
-                 <Option value="tf">True/False</Option>
-                 <Option value="sa">Short Answer</Option>
-                 <Option value="es">Essay</Option>
-                 <Option value="mt">Matching</Option>
-                 <Option value="rc">Ranked Choice</Option>
-               </Select>
-               <Button shape="circle" icon="plus" style={{ marginLeft: ".5vw" }} onClick={this.addQuestion}/>
-             </div>
-           </div>
-         </div>
-         </div>
-      )
-   }
 
 
    getTest() {
@@ -128,8 +48,8 @@ class Display extends React.Component {
          });
    };
 
-   modifyTest() {
-      axios.post('http://localhost:8080/modify', this.state)
+   submitTest() {
+      axios.post('http://localhost:8080/submitTest', this.state)
          .then((response) => {
             console.log(response);
             this.setState(() => ( {code: response.data }), () => {
@@ -144,9 +64,6 @@ class Display extends React.Component {
          });
    };
    
-   setModify() {
-      this.setState({modify: (this.state.modify ? false : true)});
-   }
    
    renderQuestion(questions) {
       console.log(questions);
@@ -187,40 +104,21 @@ class Display extends React.Component {
    renderQuestions = () => {
       return this.state.code.questions.map((question) => {
         if (question.type === 'mc') {
-          return <MultipleChoice callback={this.getQuestionState} key = {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
+          return <MultipleChoice callback={this.getQuestionState} key = {question.index} index={question.index} editable={true}/>
         } else if (question.type === 'tf') {
-          return <TrueOrFalse callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
+          return <TrueOrFalse callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
         } else if (question.type === 'sa') {
-          return <ShortAnswer callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
+          return <ShortAnswer callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
         }  else if (question.type === 'es') {
-          return <Essay callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
+          return <Essay callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
         }  else if (question.type === 'rc') {
-          return <RankedChoice callback={this.getQuestionState} key= {question.index} index={question.index} removeItself={this.removeQuestion} editable={true}/>
+          return <RankedChoice callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
         } else {
           return null;
         }
     });
     }
   
-    addQuestion = () => {
-      this.setState((state) => {
-        state.code.questions.push( {
-          type: this.state.currQuestionType,
-          index: ('00000000000'+(Math.random().toString())).slice(-11)
-        })
-        return {questions: state.code.questions}
-      }, () => console.log(this.state.questions))
-    }
-  
-    removeQuestion = (index) => {
-      console.log(index)
-        this.setState((state) => { 
-            state.code.questions = state.code.questions.filter((e) => e.index !== index)
-            return {
-               code: state.code
-            }
-        }, () => console.log(this.state.code.questions))
-    }
 
  
    render () {
@@ -232,11 +130,10 @@ class Display extends React.Component {
             <div>
                <Layout>
                   <div className='display'>
-                  <div>Please enter code to display test/survey:</div>
+                  <div>Please enter access code to take test/survey:</div>
                      <Input value={testID} id='testID' placeholder="MongoDB ID" onChange={(e) => this.handleLookUpChange(e)}/>
                      <Button type="primary" style={{marginLeft: '.5vw', marginTop: '.5vh',  width: '135px' }} onClick={() => this.getTest()}>Submit</Button>
                   </div>
-                  <div>{this.state.modify ? this.displayCreate() : <div></div>}</div>
                   {this.state.code.questions != undefined  &&
                   <div>
                      <hr style={{ width: "97%",  marginTop: "2vh"}} />
@@ -245,7 +142,7 @@ class Display extends React.Component {
                            {this.state.code.testName}
                         </div>
                         <div style={{display: "inline-block", float: "left", marginLeft: '2vw'}}>
-                           {this.state.modify ?  <Button type="primary" style={{width: '135px' }} onClick={() => this.modifyTest()}>Save</Button> : <Button type="primary" style={{width: '135px' }} onClick={() => this.setModify()}>Modify</Button>}
+                          <Button type="primary" style={{width: '155px' }} onClick={() => this.submitTest()}>Submit Test/Survey</Button>
                         </div>
                      </div>
                      <hr style={{ width: "97%", marginTop: "4.25vh"}} />

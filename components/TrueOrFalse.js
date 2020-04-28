@@ -88,7 +88,7 @@ class TrueOrFalse extends React.Component {
                     </div>
                   </div>
                   <div id="answers">
-                  <Radio.Group onChange={this.onChange} value={this.state.value}>
+                  <Radio.Group onChange={this.onChange} value={this.props.editable ? this.state.value : null}>
                       <Radio style={radioStyle} value={true}>
                         True
                       </Radio>

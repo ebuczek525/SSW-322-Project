@@ -39,7 +39,7 @@ class Header extends React.Component {
                     <Col span={20} className='header'>
                     <Row justify="space-around" type="flex">
                         <Col span={12} md={12} xs={24}>
-                        <span ><h1 style={{color: '#ffffff', fontSize: '5vh', marginLeft: '4vw'}}>Website Name</h1></span>
+                        <span ><h1 style={{color: '#ffffff', fontSize: '5vh', marginLeft: '4vw'}}>Test Library</h1></span>
                         </Col>
                         <Col span={12} md={12} xs={0}>
                         <span className="ml-30 float-right"> </span>
@@ -64,6 +64,11 @@ class Header extends React.Component {
               <Menu.Item key="display">
                 <Link href="/display">
                   <a style={linkStyle}>Display Test/Survey</a>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="take">
+                <Link href="/take">
+                  <a style={linkStyle}>Take Test/Survey</a>
                 </Link>
               </Menu.Item>
               </ Menu>

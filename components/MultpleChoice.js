@@ -106,7 +106,7 @@ class MultipleChoice extends React.Component {
                 </div>
               </div>
               <div id="answers">
-              <Radio.Group onChange={this.onChange} value={this.state.value}>
+              <Radio.Group onChange={this.onChange} value={this.props.editable ? this.state.value : null}>
                   <Radio style={radioStyle} value={answers['answer1']}>
                     <Input disabled value={answers['answer1']} id='answer1'/>
                   </Radio>

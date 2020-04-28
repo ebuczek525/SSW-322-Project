@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const url = 'mongodb://testsUser:tests@localhost:27017/tests';
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -48,7 +47,7 @@ app.get('/test', function(req, res) {
     return res.send('Received a GET HTTP method!');
   });
 
-app.post('/display', function(req, res) {
+  const display  =  (req, res) => {
     console.log('got to display');
     console.log(req.body)
     if(req.body.id == undefined){
@@ -66,10 +65,13 @@ app.post('/display', function(req, res) {
     });
     }
     
-});
+}
 
-app.post('/modify', function(req, res) {
+app.post('/display', display);
+
+app.post('/modify', function(req, res, next) {
   console.log('got to modify post');
+  console.log(req.body.id instanceof String);
     test.findOneAndUpdate(
       {_id: new ObjectId(req.body.id)}, 
       {
@@ -83,12 +85,12 @@ app.post('/modify', function(req, res) {
           res.send(err);
           console.log(req.body, err, result);
         } else {
-          res.send(result);
+          next()
           console.log(req.body, err, result);
         }
       }
     );
-});
+}, display);
 
 app.post('/create', function(req, res) {
     const sentData = new test(req.body);
