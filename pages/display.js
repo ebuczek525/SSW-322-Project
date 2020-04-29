@@ -13,9 +13,18 @@ import {
    Select
  } from 'antd';
 
+import {Router} from 'next/router'
+
+
 import '../styling/display.less';
 import axios from 'axios';
 
+const handleRouteChange = (url) => {
+   if(!confirm("Are you sure you want to change pages?")){
+      window._cancel = true 
+   }
+
+}
 
 class Display extends React.Component {
    constructor(props) {
