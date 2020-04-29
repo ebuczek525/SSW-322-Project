@@ -19,6 +19,8 @@ class RankedChoice extends React.Component {
             index: this.props.index,
           };
 
+        }else if(this.props.takeable){
+          this.state = this.props.question;
           this.props.callback(this.state);
         } else {
           this.state = this.props.callback()
@@ -46,7 +48,10 @@ class RankedChoice extends React.Component {
         console.log(e);
         this.setState((state) => {
           state.answers[e.target.id][1] = e.target.value
-          return {answers: state.answers};
+          return {
+            answers: state.answers,
+            ...(!this.props.takeable && { correctAnswer: state.answers})
+          };
         }, () => {this.props.callback(this.state)});
         console.log('changed:', e );
       }

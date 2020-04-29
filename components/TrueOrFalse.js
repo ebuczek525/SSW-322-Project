@@ -19,6 +19,8 @@ class TrueOrFalse extends React.Component {
             index: this.props.index,
           };
 
+        }else if(this.props.takeable){
+          this.state = this.props.question;
           this.props.callback(this.state);
         } else {
           this.state = this.props.callback()
@@ -35,7 +37,7 @@ class TrueOrFalse extends React.Component {
         console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
-          correctAnswer: e.target.value
+          ...(!this.props.takeable && { correctAnswer: (e.target.value)})
         }, () => {this.props.callback(this.state)});
       };
 
@@ -88,7 +90,7 @@ class TrueOrFalse extends React.Component {
                     </div>
                   </div>
                   <div id="answers">
-                  <Radio.Group onChange={this.onChange} value={this.props.editable ? this.state.value : null}>
+                  <Radio.Group onChange={this.onChange} value={this.state.value}>
                       <Radio style={radioStyle} value={true}>
                         True
                       </Radio>

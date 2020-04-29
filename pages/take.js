@@ -5,6 +5,8 @@ import ShortAnswer from "../components/ShortAnswer";
 import Essay from "../components/Essay";
 import RankedChoice from "../components/RankedChoice";
 
+import {Router} from 'next/router'
+
 import { 
    Button,
    Input,
@@ -16,6 +18,15 @@ import {
 import '../styling/display.less';
 import axios from 'axios';
 
+console.log(Router)
+const handleRouteChange = (url) => {
+   if(!confirm("Are you sure you want to change pages?")){
+      window._cancel = true 
+   }
+
+}
+
+Router.events.on('routeChangeStart', handleRouteChange)
 
 class Display extends React.Component {
    constructor(props) {
@@ -24,6 +35,7 @@ class Display extends React.Component {
      this.state = {
        id: '',
        code: '',
+       warn: true,
      };
    }
 
@@ -55,12 +67,12 @@ class Display extends React.Component {
             this.setState(() => ( {code: response.data }), () => {
                console.log(this.state)
             })
-            message.success('Test Modified Successfully');
+            message.success('Test Answers Submitted');
             console.log(response);
          })
          .catch((error) => {
             console.log(error);
-            message.error('Test Modify Failed.');
+            message.error('Test Answers Failed.');
          });
    };
    
@@ -69,16 +81,27 @@ class Display extends React.Component {
       console.log(questions);
       if (questions != undefined && questions.length != 0) {
          return questions.map(question => {
+            return {
+               
+               index: question.index,
+               ...(question.type != undefined && {type: question.type}),
+               ...(question.question != undefined && {question: question.question}),
+               ...(question.correctAnswer != undefined && {correctAnswer: question.correctAnswer}),
+               ...(question.answers != undefined && {answers: question.answers}),
+               ...(question.value != undefined && {value: undefined}),
+
+            }
+         }).map(question => {
             if (question.type === 'mc') {
-               return <MultipleChoice callback={( this.state.modify ? this.getQuestionState : () => {return this.setQuestionState(question)})} removeItself={this.removeQuestion} key = {question.index} index={question.index} editable={this.state.modify}/>
+               return <MultipleChoice callback={this.getQuestionState}  question={question} key = {question.index} index={question.index} takeable />
             } else if (question.type === 'tf') {
-               return <TrueOrFalse callback={( this.state.modify ? this.getQuestionState : () => {return this.setQuestionState(question)})} removeItself={this.removeQuestion} key= {question.index} index={question.index} editable={this.state.modify}/>
+               return <TrueOrFalse callback={this.getQuestionState} question={question} key= {question.index} index={question.index} takeable />
              } else if (question.type === 'sa') {
-               return <ShortAnswer callback={( this.state.modify ? this.getQuestionState : () => {return this.setQuestionState(question)})} removeItself={this.removeQuestion} key= {question.index} index={question.index} editable={this.state.modify}/>
+               return <ShortAnswer callback={this.getQuestionState} question={question} key= {question.index} index={question.index} takeable/>
              }  else if (question.type === 'es') {
-               return <Essay callback={( this.state.modify ? this.getQuestionState : () => {return this.setQuestionState(question)})} removeItself={this.removeQuestion} key= {question.index} index={question.index} editable={this.state.modify}/>
+               return <Essay callback={this.getQuestionState} question={question} key= {question.index} index={question.index} takeable/>
              }  else if (question.type === 'rc') {
-               return <RankedChoice callback={( this.state.modify ? this.getQuestionState : () => {return this.setQuestionState(question)})} removeItself={this.removeQuestion} key= {question.index} index={question.index} editable={this.state.modify}/>
+               return <RankedChoice callback={this.getQuestionState} question={question} key= {question.index} index={question.index} takeable/>
              } else {
                 return null;
              }
@@ -101,23 +124,6 @@ class Display extends React.Component {
        }, () => {console.log(this.state.code.questions)})
    }
 
-   renderQuestions = () => {
-      return this.state.code.questions.map((question) => {
-        if (question.type === 'mc') {
-          return <MultipleChoice callback={this.getQuestionState} key = {question.index} index={question.index} editable={true}/>
-        } else if (question.type === 'tf') {
-          return <TrueOrFalse callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
-        } else if (question.type === 'sa') {
-          return <ShortAnswer callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
-        }  else if (question.type === 'es') {
-          return <Essay callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
-        }  else if (question.type === 'rc') {
-          return <RankedChoice callback={this.getQuestionState} key= {question.index} index={question.index}  editable={true}/>
-        } else {
-          return null;
-        }
-    });
-    }
   
 
  
@@ -129,6 +135,7 @@ class Display extends React.Component {
          <>
             <div>
                <Layout>
+              
                   <div className='display'>
                   <div>Please enter access code to take test/survey:</div>
                      <Input value={testID} id='testID' placeholder="MongoDB ID" onChange={(e) => this.handleLookUpChange(e)}/>
@@ -153,7 +160,8 @@ class Display extends React.Component {
                      {this.renderQuestion(this.state.code.questions) }  
                   </div>
                </Layout>
-            </div>
+              
+               </div>
          </>
       );
    }

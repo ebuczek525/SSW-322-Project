@@ -9,7 +9,18 @@ import { Select, Button, Input, Switch, message,} from "antd";
 import axios from 'axios';
 import "../styling/create.less";
 
+import {Router} from 'next/router'
+
+
+
 const { Option } = Select;
+
+const handleRouteChange = (url) => {
+  if(!confirm("Are you sure you want to change pages?")){
+     window._cancel = true 
+  }
+
+}
 
 class Create extends React.Component {
   constructor(props) {
@@ -81,6 +92,9 @@ class Create extends React.Component {
 
   getQuestionState = (state) => {
     this.setState((oldState) => {
+      if(!this.state.testOrSurvey){
+        delete state.correctAnswer
+      }
       oldState.questions[oldState.questions.findIndex(x => x.index === state.index)] = state
       console.log(this.state.questions)
       return {questions: oldState.questions}

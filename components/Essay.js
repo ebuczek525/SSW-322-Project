@@ -18,10 +18,12 @@ class Essay extends React.Component {
             value: '',
             index: this.props.index,
         };
-          this.props.callback(this.state);
-        } else {
-          this.state = this.props.callback()
-        }
+      }else if(this.props.takeable){
+        this.state = this.props.question;
+        this.props.callback(this.state);
+      } else {
+        this.state = this.props.callback()
+      }
         
       }
 

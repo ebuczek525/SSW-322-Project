@@ -2,26 +2,24 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+const database = require('./database.js')
+
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 mongoose.Promise = global.Promise;
-mongoose.connect(`mongodb://testsUser:tests@localhost:27017/tests`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      auth: {
-        user: 'testsUser',
-        password: 'tests',
-      },
-    }) .then(
-      () => {
-        console.log("success")
-      },
-      (error) => {
-        console.log(error)
-      },
-    )
+
+
+
+ database.connect("tests", (success) => {
+      if(success){
+          console.log("=Database Connected");
+      }
+      else {
+          console.log("Database Connection Failed")
+      }
+  })
+
 
 
 app.use(cors());
@@ -35,7 +33,12 @@ const testSchema = new mongoose.Schema({
     questions: [Object]
 });
 
+const responseSchema = new mongoose.Schema({
+    response: [Object]
+})
+
 const test = mongoose.model('test', testSchema);
+const response = mongoose.model('response', responseSchema);
 
 app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -109,6 +112,52 @@ app.post('/create', function(req, res) {
     console.log('Bottom of server post');
     console.log('Req Body:', req.body);
 });
+
+app.post('/submitTest', /* function(req, res, next) {
+  database.disconnect(() => {
+    console.log('fucking like no other')
+    database.connect("response",(success) => {
+        if(success){
+           next()
+        }
+        else {
+            res.send("Something went wrong with switching databases");
+        }
+    })
+  });
+
+  
+}, */ function(req, res, next) {
+  console.log(req.body.code.questions)
+  const sentData = new response({response: req.body.code.questions});
+  console.log('got to submit test');
+
+  sentData.save()
+      .then(() => {
+        console.log('test saved to database');
+        res.status(200).send({fuck: 'off'})
+      }, (err) => {
+        console.log('errored out');
+        res.status(400);
+        res.send('got here db');
+      })
+
+  console.log('Bottom of server post');
+  console.log('Req Body:', req.body);
+  
+  
+}/*,  function(req, res, next) {
+  database.disconnect(() => {
+    database.connect("tests",(success) => {
+        if(success){
+          res.status(200);
+        }
+        else {
+            res.send("Something went wrong with switching databases");
+        }
+    })
+})} */
+)
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, function() {

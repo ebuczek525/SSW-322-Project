@@ -15,10 +15,13 @@ class MultipleChoice extends React.Component {
             question: '',
             correctAnswer: '',
             answers: {},
-            value: '',
+            value: "",
             index: this.props.index,
         };
 
+          this.props.callback(this.state);
+        }else if(this.props.takeable){
+          this.state = this.props.question;
           this.props.callback(this.state);
         } else {
           this.state = this.props.callback()
@@ -45,7 +48,7 @@ class MultipleChoice extends React.Component {
         console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
-          correctAnswer: e.target.value
+          ...(!this.props.takeable && { correctAnswer: (e.target.value)})
         }, () => {this.props.callback(this.state)});
       };
 
@@ -106,7 +109,7 @@ class MultipleChoice extends React.Component {
                 </div>
               </div>
               <div id="answers">
-              <Radio.Group onChange={this.onChange} value={this.props.editable ? this.state.value : null}>
+              <Radio.Group onChange={this.onChange} value={this.state.value}>
                   <Radio style={radioStyle} value={answers['answer1']}>
                     <Input disabled value={answers['answer1']} id='answer1'/>
                   </Radio>
